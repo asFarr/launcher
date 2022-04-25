@@ -128,8 +128,7 @@ def launch_cleanup(args):
 
 
 def brave_launch():  # Not implemented yet, switching to Selenium
-    # url = "https://ungitsm.service-now.com/nav_to.do?uri=%2F$pa_dashboard.do%3Fsysparm_dashboard%3D9934f2e61b2eb0107a70fc8e034bcb21%26sysparm_tab%3D055476e61b2eb0107a70fc8e034bcbba%26sysparm_cancelable%3Dtrue%26sysparm_editable%3Dundefined%26sysparm_active_panel%3Dfalse"
-    # brave_path = r"C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe"
+        # brave_path = r"C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe"
 
     time.sleep(3)
     hwnd = gui.GetForegroundWindow()
