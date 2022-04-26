@@ -31,33 +31,19 @@ def application_launch(args):
                             APPLICATION_DIMENSION[2], int(APPLICATION_DIMENSION[3] / 2), True)
 """
 
-import getopt
-import sys
-import pyautogui as ag
-import psutil
-import os
-import win32con
 import win32gui as gui
-import time
-import selenium
+import re
 
-APPS = ['Brave', 'OUTLOOK', 'Spotify', 'Teams', 'PyCharm']
+APPS = ['Brave', 'Outlook', 'Spotify', 'Teams', 'PyCharm']
 
 SPOT_PATH = r''
 OUTL_PATH = r''
 TEAM_PATH = r''
 
-SPOT_DELAY = 3
-OUTL_DELAY = 4
-TEAM_DELAY = 7
-
 PC_DIM = [0, 0, 1280, 1400]
 TM_DIM = [2561, 0, 853, 1400]
 OL_DIM = [3413, 0, 853, 1400]
 SP_DIM = [4260, 0, 865, 1400]
-
-ag.PAUSE = 0.5
-ag.FAILSAFE = True
 
 
 def author():
@@ -114,103 +100,20 @@ def helpme():
         print(i)
 
 
-def launch_cleanup(args):
-    """Resize and move Pycharm launcher.py session if open."""
-    running = APPS[4] + '.EXE' in (i.name() for i in psutil.process_iter())
-    if not running:
-        pass
-    hwnd = gui.FindWindow('SunAwtFrame', None)
-    for arg in args:
-        if arg == "-t":
-            gui.MoveWindow(hwnd, PC_DIM[0], PC_DIM[1], PC_DIM[2], PC_DIM[3], True)
-        elif arg == "-m":
-            gui.MoveWindow(hwnd, PC_DIM[0] + 2561, PC_DIM[1], PC_DIM[2], int(PC_DIM[3] / 2), True)
+def set_dimensions(hwnd, extra):
+    if re.search(APPS[1], gui.GetWindowText(hwnd)):
+        gui.MoveWindow(hwnd, OL_DIM[0], OL_DIM[1], OL_DIM[2], OL_DIM[3], True)
+
+    if re.search(APPS[2], gui.GetWindowText(hwnd)):
+        gui.MoveWindow(hwnd, SP_DIM[0], SP_DIM[1], SP_DIM[2], SP_DIM[3], True)
+
+    if re.search(APPS[3], gui.GetWindowText(hwnd)):
+        gui.MoveWindow(hwnd, TM_DIM[0], TM_DIM[1], TM_DIM[2], TM_DIM[3], True)
 
 
-def brave_launch():  # Not implemented yet, switching to Selenium
-        # brave_path = r"C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe"
-
-    time.sleep(3)
-    hwnd = gui.GetForegroundWindow()
-    gui.MoveWindow(hwnd, 0, -1080, 800, 600, True)
-    gui.ShowWindow(hwnd, win32con.SW_MAXIMIZE)
-
-
-def email_launch(args):
-    """Check to see if E-mail is running, open it if not, then resize and move it. """
-    running = APPS[1] + '.EXE' in (i.name() for i in psutil.process_iter())
-    if not running:
-        os.startfile(OUTL_PATH)
-        time.sleep(OUTL_DELAY)
-    hwnd = gui.FindWindow('rctrl_renwnd32', "Inbox - Alex.Farr@ung.edu - Outlook")
-    for arg in args:
-        if arg == "-t":
-            gui.MoveWindow(hwnd, OL_DIM[0], OL_DIM[1], OL_DIM[2], OL_DIM[3], True)
-        elif arg == "-m":
-            gui.MoveWindow(hwnd, OL_DIM[0], OL_DIM[1] + 700, OL_DIM[2], int(OL_DIM[3] / 2), True)
-
-
-def spotify_launch(args):
-    """Check to see if Spotify is running, open it if not, then resize and move it. """
-    running = APPS[2] + '.exe' in (i.name() for i in psutil.process_iter())
-    if not running:
-        os.startfile(SPOT_PATH)
-        time.sleep(SPOT_DELAY)
-    hwnd = gui.FindWindow(None, "Spotify Premium")
-    for arg in args:
-        if arg == "-t":
-            gui.MoveWindow(hwnd, SP_DIM[0], SP_DIM[1], SP_DIM[2], SP_DIM[3], True)
-        elif arg == "-m":
-            gui.MoveWindow(hwnd, SP_DIM[0], SP_DIM[1] + 700, SP_DIM[2], int(SP_DIM[3] / 2), True)
-
-
-def teams_launch(args):
-    """Check to see if Spotify is running, open it if not, then resize and move it. """
-    running = APPS[3] + '.exe' in (i.name() for i in psutil.process_iter())
-    if not running:
-        os.startfile(TEAM_PATH)
-        time.sleep(TEAM_DELAY)
-    hwnd = gui.GetForegroundWindow()
-    for arg in args:
-        if arg == "-t":
-            gui.MoveWindow(hwnd, TM_DIM[0], TM_DIM[1], TM_DIM[2], TM_DIM[3], True)
-        elif arg == "-m":
-            gui.MoveWindow(hwnd, TM_DIM[0], TM_DIM[1] + 700, TM_DIM[2], int(TM_DIM[3] / 2), True)
-
-
-def main(args):
-    """Main Driver - Parse CLI flags/options and run the related subprogram."""
-    if not args:  # if no flags/args passed, apply defaults
-        argument_list = ['-a', '-h']
-    else:  # inherit flags/args list
-        argument_list = args
-
-    options = "ahtm"  # define range of possible flags
-
-    try:  # attempt to map flags to their corresponding arguments
-        arguments, values = getopt.getopt(argument_list, options)
-
-        # logical matching for arguments to driving logic
-        for current_argument, current_value in arguments:
-            if current_argument == "-a":
-                author()
-
-            if current_argument == "-h":
-                helpme()
-
-            if (current_argument == "-m") | (current_argument == "-t"):
-                #brave_launch()
-                email_launch(args)
-                spotify_launch(args)
-                teams_launch(args)
-                launch_cleanup(args)
-
-    except getopt.error as err:  # if mapping fails, pass stderr through to output
-        print(str(err))
-    return 0
+def main():
+    gui.EnumWindows(set_dimensions, None)
 
 
 if __name__ == '__main__':
-    # pass main driver function args list from sys
-    # start at index 1 to skip over the command call itself
-    main(sys.argv[1:])
+    main()
