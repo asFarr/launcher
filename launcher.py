@@ -32,18 +32,19 @@ def application_launch(args):
 """
 
 import win32gui as gui
+import getopt
+import sys
 import re
 
-APPS = ['Brave', 'Outlook', 'Spotify', 'Teams', 'PyCharm']
+APPS = ['Outlook', 'Spotify', 'Teams']
 
 SPOT_PATH = r''
 OUTL_PATH = r''
 TEAM_PATH = r''
 
-PC_DIM = [0, 0, 1280, 1400]
-TM_DIM = [2561, 0, 853, 1400]
-OL_DIM = [3413, 0, 853, 1400]
-SP_DIM = [4260, 0, 865, 1400]
+tm_dim = [2561, 0, 853, 1400]
+ol_dim = [3413, 0, 853, 1400]
+sp_dim = [4260, 0, 865, 1400]
 
 
 def author():
@@ -101,19 +102,53 @@ def helpme():
 
 
 def set_dimensions(hwnd, extra):
+    if re.search(APPS[0], gui.GetWindowText(hwnd)):
+        gui.MoveWindow(hwnd, ol_dim[0], ol_dim[1], ol_dim[2], ol_dim[3], True)
+
     if re.search(APPS[1], gui.GetWindowText(hwnd)):
-        gui.MoveWindow(hwnd, OL_DIM[0], OL_DIM[1], OL_DIM[2], OL_DIM[3], True)
+        gui.MoveWindow(hwnd, sp_dim[0], sp_dim[1], sp_dim[2], sp_dim[3], True)
 
     if re.search(APPS[2], gui.GetWindowText(hwnd)):
-        gui.MoveWindow(hwnd, SP_DIM[0], SP_DIM[1], SP_DIM[2], SP_DIM[3], True)
-
-    if re.search(APPS[3], gui.GetWindowText(hwnd)):
-        gui.MoveWindow(hwnd, TM_DIM[0], TM_DIM[1], TM_DIM[2], TM_DIM[3], True)
+        gui.MoveWindow(hwnd, tm_dim[0], tm_dim[1], tm_dim[2], tm_dim[3], True)
 
 
-def main():
-    gui.EnumWindows(set_dimensions, None)
+def main(args):
+    """Main Driver - Parse CLI flags/options and run the related subprogram."""
+    if not args:  # if no flags/args passed, apply defaults
+        argument_list = ['-a', '-h']
+    else:  # inherit flags/args list
+        argument_list = args
+
+    options = "ahtm"  # define range of possible flags
+
+    try:  # attempt to map flags to their corresponding arguments
+        arguments, values = getopt.getopt(argument_list, options)
+
+        # logical matching for arguments to driving logic
+        for current_argument, current_value in arguments:
+            if current_argument == "-a":
+                author()
+
+            if current_argument == "-h":
+                helpme()
+
+            if current_argument == "-t":
+                gui.EnumWindows(set_dimensions, None)
+
+            if current_argument == "-m":
+                ol_dim[1] = ol_dim[1] + 700
+                ol_dim[3] = int(ol_dim[3] / 2)
+                sp_dim[1] = sp_dim[1] + 700
+                sp_dim[3] = int(sp_dim[3] / 2)
+                tm_dim[1] = tm_dim[1] + 700
+                tm_dim[3] = int(tm_dim[3] / 2)
+                gui.EnumWindows(set_dimensions, None)
+
+    except getopt.error as err:  # if mapping fails, pass stderr through to output
+        print(str(err))
 
 
 if __name__ == '__main__':
-    main()
+    # pass main driver function args list from sys
+    # start at index 1 to skip over the command call itself
+    main(sys.argv[1:])
