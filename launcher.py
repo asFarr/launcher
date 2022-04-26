@@ -43,9 +43,9 @@ import selenium
 
 APPS = ['Brave', 'OUTLOOK', 'Spotify', 'Teams', 'PyCharm']
 
-SPOT_PATH = r'C:\Users\asfarr\AppData\Roaming\Spotify\Spotify.exe'
-OUTL_PATH = r'C:\Program Files (x86)\Microsoft Office\Office16\OUTLOOK.EXE'
-TEAM_PATH = r'C:\Users\asfarr\AppData\Local\Microsoft\Teams\current\Teams.exe'
+SPOT_PATH = r''
+OUTL_PATH = r''
+TEAM_PATH = r''
 
 SPOT_DELAY = 3
 OUTL_DELAY = 4
@@ -207,6 +207,7 @@ def main(args):
 
     except getopt.error as err:  # if mapping fails, pass stderr through to output
         print(str(err))
+    return 0
 
 
 if __name__ == '__main__':
