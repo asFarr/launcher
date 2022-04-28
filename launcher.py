@@ -31,20 +31,29 @@ def application_launch(args):
                             APPLICATION_DIMENSION[2], int(APPLICATION_DIMENSION[3] / 2), True)
 """
 
+import webbrowser as web
 import win32gui as gui
+import psutil
 import getopt
+import time
 import sys
+import os
 import re
 
-APPS = ['Outlook', 'Spotify', 'Teams']
+APPS = ['OUTLOOK', 'Spotify', 'Teams', 'Brave']
 
-SPOT_PATH = r''
-OUTL_PATH = r''
-TEAM_PATH = r''
+SPOT_PATH = r'C:\Users\asfarr\AppData\Roaming\Spotify\Spotify.exe'
+OUTL_PATH = r'C:\Program Files (x86)\Microsoft Office\Office16\OUTLOOK.EXE'
+TEAM_PATH = r'C:\Users\asfarr\AppData\Local\Microsoft\Teams\current\Teams.exe'
+BRAV_PATH = r'C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe'
 
 tm_dim = [2561, 0, 853, 1400]
 ol_dim = [3413, 0, 853, 1400]
 sp_dim = [4260, 0, 865, 1400]
+br_dim = [0, -1080, 1920, 1080]
+
+APP_DELAY = 8
+re.IGNORECASE = True
 
 
 def author():
@@ -111,6 +120,9 @@ def set_dimensions(hwnd, extra):
     if re.search(APPS[2], gui.GetWindowText(hwnd)):
         gui.MoveWindow(hwnd, tm_dim[0], tm_dim[1], tm_dim[2], tm_dim[3], True)
 
+    if re.search(APPS[3], gui.GetWindowText(hwnd)):
+        gui.MoveWindow(hwnd, br_dim[0], br_dim[1], br_dim[2], br_dim[3], True)
+
 
 def main(args):
     """Main Driver - Parse CLI flags/options and run the related subprogram."""
@@ -120,6 +132,21 @@ def main(args):
         argument_list = args
 
     options = "ahtm"  # define range of possible flags
+    for app in APPS:
+        running = app + '.exe' in (i.name() for i in psutil.process_iter())
+        if not running:
+            if re.search('Spotify', app):
+                os.startfile(SPOT_PATH)
+                time.sleep(APP_DELAY)
+            if re.search('Outlook', app):
+                os.startfile(OUTL_PATH)
+                time.sleep(APP_DELAY)
+            if re.search('Teams', app):
+                os.startfile(TEAM_PATH)
+                time.sleep(APP_DELAY)
+            if re.search('Brave', app):
+                os.startfile(BRAV_PATH)
+                time.sleep(APP_DELAY)
 
     try:  # attempt to map flags to their corresponding arguments
         arguments, values = getopt.getopt(argument_list, options)
