@@ -1,5 +1,5 @@
 """
-The CerealBox toolkit: Window Launcher (v1.0) - by leToads : 3/1/22
+The CerealBox toolkit: Window Launcher (v2.0) - by leToads : 4/28/22
 
 An automation-ready command line tool for organizing windows
 into predefined configurations to optimize workflow.
@@ -12,52 +12,31 @@ into predefined configurations to optimize workflow.
     launcher.py -h    -   Display the help dialog.
     launcher.py -t    -   Runs 'tall' window configuration settings
     launcher.py -m    -   Runs 'mid' window configuration settings
-
-Example function for application control:
-
-def application_launch(args):
-
-    running = APPLICATIONS[index] + '.exe' in (i.name() for i in psutil.process_iter())
-    if not running:
-        os.startfile(APPLICATION_LAUNCH_PATH)
-        time.sleep(APPLICATION_LAUNCH_DELAY)
-    hwnd = gui.FindWindow(WindowHandle, WindowName)
-    for arg in args:
-        if arg == "-t":
-            gui.MoveWindow(hwnd, APPLICATION_DIMENSION[0], APPLICATION_DIMENSION[1],
-                            APPLICATION_DIMENSION[2], APPLICATION_DIMENSION[3], True)
-        elif arg == "-m":
-            gui.MoveWindow(hwnd, APPLICATION_DIMENSION[0], APPLICATION_DIMENSION[1] + 700,
-                            APPLICATION_DIMENSION[2], int(APPLICATION_DIMENSION[3] / 2), True)
 """
 
-import getopt
-import sys
-import pyautogui as ag
-import psutil
-import os
-import win32con
+import webbrowser as web
 import win32gui as gui
+import psutil
+import getopt
 import time
-import selenium
+import sys
+import os
+import re
 
-APPS = ['Brave', 'OUTLOOK', 'Spotify', 'Teams', 'PyCharm']
+APPS = ['OUTLOOK', 'Spotify', 'Teams', 'Brave']
 
 SPOT_PATH = r'C:\Users\asfarr\AppData\Roaming\Spotify\Spotify.exe'
 OUTL_PATH = r'C:\Program Files (x86)\Microsoft Office\Office16\OUTLOOK.EXE'
-TEAM_PATH = r'C:\Users\asfarr\AppData\Local\Microsoft\Teams\current\Teams.exe'
 
-SPOT_DELAY = 3
-OUTL_DELAY = 4
-TEAM_DELAY = 7
+tm_dim = [2561, 0, 853, 1400]
+ol_dim = [3413, 0, 853, 1400]
+sp_dim = [4260, 0, 865, 1400]
+br_dim = [0, -1080, 1920, 1080]
 
-PC_DIM = [0, 0, 1280, 1400]
-TM_DIM = [2561, 0, 853, 1400]
-OL_DIM = [3413, 0, 853, 1400]
-SP_DIM = [4260, 0, 865, 1400]
+APP_DELAY = 8
+re.IGNORECASE = True
 
-ag.PAUSE = 0.5
-ag.FAILSAFE = True
+url = r''
 
 
 def author():
@@ -96,7 +75,7 @@ def author():
 
 def helpme():
     """Print the help and usage dialog."""
-    usage = ["The CerealBox toolkit: Window Launcher (v1.0) - by leToads : 3/1/22\n",
+    usage = ["The CerealBox toolkit: Window Launcher (v2.0) - by asFarr : 4/28/22\n",
 
 "An automation-ready command line tool for organizing windows",
 "into predefined configurations to optimize workflow.\n",
@@ -114,68 +93,19 @@ def helpme():
         print(i)
 
 
-def launch_cleanup(args):
-    """Resize and move Pycharm launcher.py session if open."""
-    running = APPS[4] + '.EXE' in (i.name() for i in psutil.process_iter())
-    if not running:
-        pass
-    hwnd = gui.FindWindow('SunAwtFrame', None)
-    for arg in args:
-        if arg == "-t":
-            gui.MoveWindow(hwnd, PC_DIM[0], PC_DIM[1], PC_DIM[2], PC_DIM[3], True)
-        elif arg == "-m":
-            gui.MoveWindow(hwnd, PC_DIM[0] + 2561, PC_DIM[1], PC_DIM[2], int(PC_DIM[3] / 2), True)
+def set_dimensions(hwnd, extra):
+    """Configure window dimensions for predefined set of window frames"""
+    if re.search(APPS[0], gui.GetWindowText(hwnd)):
+        gui.MoveWindow(hwnd, ol_dim[0], ol_dim[1], ol_dim[2], ol_dim[3], True)
 
+    if re.search(APPS[1], gui.GetWindowText(hwnd)):
+        gui.MoveWindow(hwnd, sp_dim[0], sp_dim[1], sp_dim[2], sp_dim[3], True)
 
-def brave_launch():  # Not implemented yet, switching to Selenium
-        # brave_path = r"C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe"
+    if re.search(APPS[2], gui.GetWindowText(hwnd)):
+        gui.MoveWindow(hwnd, tm_dim[0], tm_dim[1], tm_dim[2], tm_dim[3], True)
 
-    time.sleep(3)
-    hwnd = gui.GetForegroundWindow()
-    gui.MoveWindow(hwnd, 0, -1080, 800, 600, True)
-    gui.ShowWindow(hwnd, win32con.SW_MAXIMIZE)
-
-
-def email_launch(args):
-    """Check to see if E-mail is running, open it if not, then resize and move it. """
-    running = APPS[1] + '.EXE' in (i.name() for i in psutil.process_iter())
-    if not running:
-        os.startfile(OUTL_PATH)
-        time.sleep(OUTL_DELAY)
-    hwnd = gui.FindWindow('rctrl_renwnd32', "Inbox - Alex.Farr@ung.edu - Outlook")
-    for arg in args:
-        if arg == "-t":
-            gui.MoveWindow(hwnd, OL_DIM[0], OL_DIM[1], OL_DIM[2], OL_DIM[3], True)
-        elif arg == "-m":
-            gui.MoveWindow(hwnd, OL_DIM[0], OL_DIM[1] + 700, OL_DIM[2], int(OL_DIM[3] / 2), True)
-
-
-def spotify_launch(args):
-    """Check to see if Spotify is running, open it if not, then resize and move it. """
-    running = APPS[2] + '.exe' in (i.name() for i in psutil.process_iter())
-    if not running:
-        os.startfile(SPOT_PATH)
-        time.sleep(SPOT_DELAY)
-    hwnd = gui.FindWindow(None, "Spotify Premium")
-    for arg in args:
-        if arg == "-t":
-            gui.MoveWindow(hwnd, SP_DIM[0], SP_DIM[1], SP_DIM[2], SP_DIM[3], True)
-        elif arg == "-m":
-            gui.MoveWindow(hwnd, SP_DIM[0], SP_DIM[1] + 700, SP_DIM[2], int(SP_DIM[3] / 2), True)
-
-
-def teams_launch(args):
-    """Check to see if Spotify is running, open it if not, then resize and move it. """
-    running = APPS[3] + '.exe' in (i.name() for i in psutil.process_iter())
-    if not running:
-        os.startfile(TEAM_PATH)
-        time.sleep(TEAM_DELAY)
-    hwnd = gui.GetForegroundWindow()
-    for arg in args:
-        if arg == "-t":
-            gui.MoveWindow(hwnd, TM_DIM[0], TM_DIM[1], TM_DIM[2], TM_DIM[3], True)
-        elif arg == "-m":
-            gui.MoveWindow(hwnd, TM_DIM[0], TM_DIM[1] + 700, TM_DIM[2], int(TM_DIM[3] / 2), True)
+    if re.search(APPS[3], gui.GetWindowText(hwnd)):
+        gui.MoveWindow(hwnd, br_dim[0], br_dim[1], br_dim[2], br_dim[3], True)
 
 
 def main(args):
@@ -186,6 +116,16 @@ def main(args):
         argument_list = args
 
     options = "ahtm"  # define range of possible flags
+    for app in APPS:
+        running = app + '.exe' in (i.name() for i in psutil.process_iter())
+        if not running:
+            if re.search(APPS[1], app):
+                os.startfile(SPOT_PATH)
+                time.sleep(APP_DELAY)
+            if re.search(APPS[0], app):
+                os.startfile(OUTL_PATH)
+            if re.search(APPS[3], app):
+                web.open_new(url)
 
     try:  # attempt to map flags to their corresponding arguments
         arguments, values = getopt.getopt(argument_list, options)
@@ -198,12 +138,17 @@ def main(args):
             if current_argument == "-h":
                 helpme()
 
-            if (current_argument == "-m") | (current_argument == "-t"):
-                #brave_launch()
-                email_launch(args)
-                spotify_launch(args)
-                teams_launch(args)
-                launch_cleanup(args)
+            if current_argument == "-t":
+                gui.EnumWindows(set_dimensions, None)
+
+            if current_argument == "-m":
+                ol_dim[1] = ol_dim[1] + 700
+                ol_dim[3] = int(ol_dim[3] / 2)
+                sp_dim[1] = sp_dim[1] + 700
+                sp_dim[3] = int(sp_dim[3] / 2)
+                tm_dim[1] = tm_dim[1] + 700
+                tm_dim[3] = int(tm_dim[3] / 2)
+                gui.EnumWindows(set_dimensions, None)
 
     except getopt.error as err:  # if mapping fails, pass stderr through to output
         print(str(err))
