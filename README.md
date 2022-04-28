@@ -1,4 +1,4 @@
-# The CerealBox toolkit: Window Launcher (v2.0) - by asFarr
+# The CerealBox toolkit: Window Launcher (v2.0)
 Simple window control tool using flag and argument parsing for command line automation. 
 
 This tool is constrained to a windows environment due to it's usage of win32gui. 
