@@ -1,5 +1,5 @@
 """
-The CerealBox toolkit: Window Launcher (v2.0) - by leToads : 4/28/22
+The CerealBox toolkit: Window Launcher (v2.0) - by asFarr : 4/28/22
 
 An automation-ready command line tool for organizing windows
 into predefined configurations to optimize workflow.
