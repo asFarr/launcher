@@ -1,5 +1,5 @@
 """
-The CerealBox toolkit: Window Launcher (v1.0) - by leToads : 3/1/22
+The CerealBox toolkit: Window Launcher (v2.0) - by leToads : 4/28/22
 
 An automation-ready command line tool for organizing windows
 into predefined configurations to optimize workflow.
@@ -12,23 +12,6 @@ into predefined configurations to optimize workflow.
     launcher.py -h    -   Display the help dialog.
     launcher.py -t    -   Runs 'tall' window configuration settings
     launcher.py -m    -   Runs 'mid' window configuration settings
-
-Example function for application control:
-
-def application_launch(args):
-
-    running = APPLICATIONS[index] + '.exe' in (i.name() for i in psutil.process_iter())
-    if not running:
-        os.startfile(APPLICATION_LAUNCH_PATH)
-        time.sleep(APPLICATION_LAUNCH_DELAY)
-    hwnd = gui.FindWindow(WindowHandle, WindowName)
-    for arg in args:
-        if arg == "-t":
-            gui.MoveWindow(hwnd, APPLICATION_DIMENSION[0], APPLICATION_DIMENSION[1],
-                            APPLICATION_DIMENSION[2], APPLICATION_DIMENSION[3], True)
-        elif arg == "-m":
-            gui.MoveWindow(hwnd, APPLICATION_DIMENSION[0], APPLICATION_DIMENSION[1] + 700,
-                            APPLICATION_DIMENSION[2], int(APPLICATION_DIMENSION[3] / 2), True)
 """
 
 import webbrowser as web
@@ -44,8 +27,6 @@ APPS = ['OUTLOOK', 'Spotify', 'Teams', 'Brave']
 
 SPOT_PATH = r'C:\Users\asfarr\AppData\Roaming\Spotify\Spotify.exe'
 OUTL_PATH = r'C:\Program Files (x86)\Microsoft Office\Office16\OUTLOOK.EXE'
-TEAM_PATH = r'C:\Users\asfarr\AppData\Local\Microsoft\Teams\current\Teams.exe'
-BRAV_PATH = r'C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe'
 
 tm_dim = [2561, 0, 853, 1400]
 ol_dim = [3413, 0, 853, 1400]
@@ -54,6 +35,8 @@ br_dim = [0, -1080, 1920, 1080]
 
 APP_DELAY = 8
 re.IGNORECASE = True
+
+url = r''
 
 
 def author():
@@ -92,7 +75,7 @@ def author():
 
 def helpme():
     """Print the help and usage dialog."""
-    usage = ["The CerealBox toolkit: Window Launcher (v1.0) - by leToads : 3/1/22\n",
+    usage = ["The CerealBox toolkit: Window Launcher (v2.0) - by asFarr : 4/28/22\n",
 
 "An automation-ready command line tool for organizing windows",
 "into predefined configurations to optimize workflow.\n",
@@ -111,6 +94,7 @@ def helpme():
 
 
 def set_dimensions(hwnd, extra):
+    """Configure window dimensions for predefined set of window frames"""
     if re.search(APPS[0], gui.GetWindowText(hwnd)):
         gui.MoveWindow(hwnd, ol_dim[0], ol_dim[1], ol_dim[2], ol_dim[3], True)
 
@@ -135,18 +119,13 @@ def main(args):
     for app in APPS:
         running = app + '.exe' in (i.name() for i in psutil.process_iter())
         if not running:
-            if re.search('Spotify', app):
+            if re.search(APPS[1], app):
                 os.startfile(SPOT_PATH)
                 time.sleep(APP_DELAY)
-            if re.search('Outlook', app):
+            if re.search(APPS[0], app):
                 os.startfile(OUTL_PATH)
-                time.sleep(APP_DELAY)
-            if re.search('Teams', app):
-                os.startfile(TEAM_PATH)
-                time.sleep(APP_DELAY)
-            if re.search('Brave', app):
-                os.startfile(BRAV_PATH)
-                time.sleep(APP_DELAY)
+            if re.search(APPS[3], app):
+                web.open_new(url)
 
     try:  # attempt to map flags to their corresponding arguments
         arguments, values = getopt.getopt(argument_list, options)
