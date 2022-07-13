@@ -1,0 +1,14 @@
+--- # Application Preferences File - Brave
+id: 04
+load-delay: 2
+application:
+      name         : Brave
+      path         : C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe
+dimensions_local:
+      X-Origin       : 0
+      Y-Origin       : -1080
+      Width          : 1920
+      Height         : 1080
+comments: >
+  Brave currently only has one set of window dimensions but will need more to flesh out -Server mode. 
+  Currently is set to the dimensions for the work projector.

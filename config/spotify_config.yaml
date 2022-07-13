@@ -1,0 +1,13 @@
+--- # Application Preferences File - Spotify Premium
+id: 01
+load-delay: 4
+application:
+      name         : Spotify
+      path         : C:\Users\asfarr\AppData\Roaming\Spotify\Spotify.exe
+dimensions:
+      X-Origin     : 4260
+      Y-Origin     : 0
+      Width        : 865
+      Height       : 1400
+comments: >
+  Any comments may be entered from this point onward.
