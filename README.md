@@ -6,14 +6,16 @@ by: Alex Farr\
 ---
 ### v3 Changelog
 
-- YAML Config files have been added under /config, and parsing has been added 
+- YAML Config files have been added under `/config`, and parsing has been added 
     to the beginning of the script in a basic implementation. Needs to be expanded to
     allow for remote and local dimension loading once added to config schema.
-- -t and -m have been replaced by -l and -r in the flag parser. 
+- -t and -m have been replaced by `-l` and `-r` in the flag parser. 
+- Updated usage guide printed by `help` function to reflect the new flag options. 
     
 #### TODO:
 - Add full named flags in addition to single letter flags.
-- -l and -r need to be fully documented, and new control logic needs to be built. 
+- `-l` and `-r` need to be fully documented, and new control logic needs to be built. 
+- Refactor `appstart` function to handle being called with the app list flags `-g`, `-s`, and `-w`. 
 
 ---
 
