@@ -1,6 +1,6 @@
 """
 Launcher v3.0 by Alex Farr
-Written: 07/12/22
+Written: 07/12-13/22
 """
 
 import re
@@ -25,67 +25,11 @@ ag.PAUSE = 0.25
 CONF = .5
 re.IGNORECASE = True
 
-# Load specified configuration files
-
-with open("config/brave_config.yaml", mode="rt", encoding="utf-8") as config0:
-    brave_cfg = yaml.safe_load(config0)
-
-BRAVE_DELAY = brave_cfg["load-delay"]
-BRAVE_PATH = brave_cfg["application"]["path"]
-
-br_dim = []
-for val in brave_cfg["dimensions_games"].values():
-    br_dim.append(val)
-
-with open("config/discord_config.yaml", mode="rt", encoding="utf-8") as config1:
-    dscrd_cfg = yaml.safe_load(config1)
-
-DSCRD_DELAY = dscrd_cfg["load-delay"]
-DSCRD_PATH = dscrd_cfg["application"]["path"]
-
-di_dim = []
-for val in dscrd_cfg["dimensions_games"].values():
-    di_dim.append(val)
-
-with open("config/obsidian_config.yaml", mode="rt", encoding="utf-8") as config2:
-    obsd_cfg = yaml.safe_load(config2)
-
-OBSD_DELAY = obsd_cfg["load-delay"]
-OBSD_PATH = obsd_cfg["application"]["path"]
-
-ob_dim = []
-for val in obsd_cfg["dimensions_games"].values():
-    ob_dim.append(val)
-
-with open("config/spotify_config.yaml", mode="rt", encoding="utf-8") as config3:
-    spot_cfg = yaml.safe_load(config3)
-
-SPOT_DELAY = spot_cfg["load-delay"]
-SPOT_PATH = spot_cfg["application"]["path"]
-
-sp_dim = []
-for val in spot_cfg["dimensions_games"].values():
-    sp_dim.append(val)
-
-with open("config/steam_config.yaml", mode="rt", encoding="utf-8") as config4:
-    steam_cfg = yaml.safe_load(config4)
-
-STEAM_DELAY = steam_cfg["load-delay"]
-STEAM_PATH = steam_cfg["application"]["path"]
-
-sg_dim = []
-for val in steam_cfg["dimensions_games"].values():
-    sg_dim.append(val)
-sf_dim = []
-for val in steam_cfg["dimensions_friends"].values():
-    sf_dim.append(val)
-
-
-app_list = [dscrd_cfg["application"]["name"],
-            brave_cfg["application"]["name"],
-            obsd_cfg["application"]["name"],
-            spot_cfg["application"]["name"],
-            steam_cfg["application"]["name"]]
+app_list = []
+path_list = []
+delay_list = []
+remote_dims = []
+local_dims = []
 
 
 def author():
@@ -150,50 +94,56 @@ def helpme():
         print(i)
 
 
-def appstart():
+def loadcfg():
+    # Attempt to load any YAML files in /config
+    config_set = []
+    for filename in os.listdir("config"):
+        with open(os.path.join("config", filename), mode="rt", encoding="utf-8") as config:
+            config_set.append(yaml.safe_load(config))
+
+    for entry in config_set:
+        app_list.append(entry["application"]["name"])
+        path_list.append(entry["application"]["path"])
+        delay_list.append(entry["load-delay"])
+        remote_dims.append(entry["remote-dimensions"])
+        local_dims.append(entry["local-dimensions"])
+
+
+def appstart(passed_path, passed_delay):  # TODO: Currently broken
+    runlist = []
     for app in app_list:
-        running = app + '.exe' in (i.name() for i in ps.process_iter())
-        if not running:
-            if re.search(app_list[0], app):
-                os.startfile(OBSD_PATH)
-                time.sleep(OBSD_DELAY)
-            if re.search(app_list[1], app):
-                os.startfile(SPOT_PATH)
-                time.sleep(SPOT_DELAY)
-            if re.search(app_list[2], app):
-                os.startfile(DSCRD_PATH)
-                time.sleep(DSCRD_DELAY)
-            if re.search(app_list[3], app):
-                os.startfile(STEAM_PATH)
-                time.sleep(STEAM_DELAY)
-            if re.search(app_list[4], app):
-                os.startfile(BRAVE_PATH)
-                time.sleep(BRAVE_DELAY)
+        runlist.append(app + '.exe' in (i.name() for i in ps.process_iter()))
+        print(app + '.exe' in (i.name() for i in ps.process_iter()))
+        # print(runlist)
+        print(app)
+        # print(app)
+        for runcheck in runlist:
+            if runcheck is True:
+                if re.search(app_list[0], app):
+                    print("success")
+                    # os.startfile(passed_path)
+                    time.sleep(passed_delay)
 
 
-def discord():
-    """Check to see if Discord is running, open it if not, then resize and move it. """
-    running = "Discord.exe" in (i.name() for i in ps.process_iter())
-    if not running:
-        os.startfile(DSCRD_PATH)
-        time.sleep(DSCRD_DELAY)
-    hwnd = gui.FindWindow(None, app_list[0])
-    gui.MoveWindow(hwnd, di_dim[0], di_dim[1], di_dim[2], di_dim[3], True)
+def windowresize(name, dim_list):
+    #  TODO: If Brave do different stuff, and if Steam do different stuff
+    #   otherwise take window name input, find the window, and resize it to input dims
+    print(name)
+    print(dim_list)
 
+    hwnd = gui.GetForegroundWindow()
+    gui.MoveWindow(hwnd, dim_list["X-Origin"], dim_list["Y-Origin"], dim_list["Width"], dim_list["Height"], True)
 
-def steam():
-    """
-    Check to see if Steam is running, open it if not, then resize and move it.
-    Check if Friends List is open, open it if not, using image recognition on menus.
-    """
+"""def steam():
+    
+    # Check to see if Steam is running, open it if not, then resize and move it.
+    # Check if Friends List is open, open it if not, using image recognition on menus.
+    
 
     running = "steam.exe" in (i.name() for i in ps.process_iter())
     if not running:
         os.startfile(STEAM_PATH)
         time.sleep(STEAM_DELAY)
-
-    steam_window = gui.FindWindow(None, app_list[4])
-    gui.MoveWindow(steam_window, sg_dim[0], sg_dim[1], sg_dim[2], sg_dim[3], True)
 
     if gui.FindWindow(None, "Friends List") == 0:
         x_loc, y_loc, width, height = ag.locateOnScreen(
@@ -214,11 +164,12 @@ def steam():
         gui.MoveWindow(friends_window, sf_dim[0], sf_dim[1], sf_dim[2], sf_dim[3], True)
     else:
         friends_window = gui.FindWindow(None, "Friends List")
-        gui.MoveWindow(friends_window, sf_dim[0], sf_dim[1], sf_dim[2], sf_dim[3], True)
+        gui.MoveWindow(friends_window, sf_dim[0], sf_dim[1], sf_dim[2], sf_dim[3], True)"""
 
 
 def main(args):
     """Main Driver - Parse CLI flags/options and run the related subprogram."""
+    loadcfg()
     if not args:  # if no flags/args passed, apply defaults
         argument_list = ['-a', '-h']
     else:  # inherit flags/args list
@@ -251,6 +202,7 @@ def main(args):
                 print("gaming flag")
                 print("needs to write gaming app names and filepaths to name-path dictionary")
                 print("then needs to call launch check method to iterate through dictionary and launch apps")
+                appstart(path_list[0], delay_list[0])
 
             if current_argument == "-w":  # -Workstation app launch Mode
                 print("workstation flag")
@@ -262,6 +214,7 @@ def main(args):
                 print("homelab flag")
                 print("needs to write homelab site URLs and browser filepath to name-path dictionary")
                 print("then needs to call launch check method to iterate through dictionary and launch apps")
+                windowresize(app_list[0], local_dims[0])
 
     except getopt.error as err:  # if mapping fails, pass stderr through to output
         print(str(err))
