@@ -1,10 +1,14 @@
 --- # Application Preferences File - Brave
-id: 04
-load-delay: 2
 application:
       name         : Brave
       path         : C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe
-dimensions_local:
+load-delay: 2
+local-dimensions:
+      X-Origin       : 0
+      Y-Origin       : -1080
+      Width          : 1920
+      Height         : 1080
+remote-dimensions:
       X-Origin       : 0
       Y-Origin       : -1080
       Width          : 1920

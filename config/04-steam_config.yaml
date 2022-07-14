@@ -1,0 +1,29 @@
+--- # Application Preferences File - Steam
+application:
+      name         : Steam
+      path         : C:\Program Files (x86)\Steam\steam.exe
+load-delay: 16
+local-dimensions:
+      games:
+            X-Origin     : 2300
+            Y-Origin     : 535
+            Width        : 260
+            Height       : 865
+      friends:
+            X-Origin     : 2020
+            Y-Origin     : 535
+            Width        : 280
+            Height       : 865
+remote-dimensions:
+      games:
+            X-Origin     : 2300
+            Y-Origin     : 535
+            Width        : 260
+            Height       : 865
+      friends:
+            X-Origin     : 2020
+            Y-Origin     : 535
+            Width        : 280
+            Height       : 865
+comments: >
+  Steam configuration contains dimensional information for two windows, games & friends.

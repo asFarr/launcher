@@ -1,10 +1,14 @@
 --- # Application Preferences File - Discord
-id: 02
-load-delay: 5
 application:
       name         : Discord
       path         : C:\Users\leToads\AppData\Local\Discord\app-1.0.9003\Discord.exe
-dimensions_local:
+load-delay: 5
+local-dimensions:
+      X-Origin     : 3520
+      Y-Origin     : 0
+      Width        : 960
+      Height       : 1040
+remote-dimensions:
       X-Origin     : 3520
       Y-Origin     : 0
       Width        : 960

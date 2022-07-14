@@ -1,13 +1,17 @@
 --- # Application Preferences File - Obsidian
-id: 00
-load-delay: 8
 application:
       name         : Obsidian
       path         : C:\Users\leToads\AppData\Local\Obsidian\Obsidian.exe
-dimensions_local:
+load-delay: 8
+local-dimensions:
       X-Origin     : 3413
       Y-Origin     : 0
       Width        : 853
       Height       : 1400
+remote-dimensions:
+      X-Origin     : 3520
+      Y-Origin     : 0
+      Width        : 960
+      Height       : 1040
 comments: >
   Any comments may be entered from this point onward.
