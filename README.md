@@ -6,16 +6,30 @@ by: Alex Farr\
 ---
 ### v3 Changelog
 
-- YAML Config files have been added under `/config`, and parsing has been added 
-    to the beginning of the script in a basic implementation. Needs to be expanded to
-    allow for remote and local dimension loading once added to config schema.
+- YAML Config files have been added under `/config`, config ingest has been implemented in `def loadcfg():`.\
+    Config is loaded iteratively by a for loop based on the number of files present in `/config`. \
+    Each config file is expected to conform to the schema: 
+  ```
+    - application
+      - name
+      - path
+    - load-delay
+    - local-dimensions
+      - n-window_instances
+    - remote-dimensions
+      - n-window_instances
+    - comments
+    ```
+
 - -t and -m have been replaced by `-l` and `-r` in the flag parser. 
 - Updated usage guide printed by `help` function to reflect the new flag options. 
     
 #### TODO:
 - Add full named flags in addition to single letter flags.
 - `-l` and `-r` need to be fully documented, and new control logic needs to be built. 
-- Refactor `appstart` function to handle being called with the app list flags `-g`, `-s`, and `-w`. 
+- Refactor `def appstart()` function to handle being called with the app list flags `-g`, `-s`, and `-w`. \
+`def appstart()` has been refactored to `def appstart(passed_path, passed_delay)`, initial tests are using `-g`. \
+Logic needs to be reworked, does not correctly detect Brave being open during testing.
 
 ---
 
@@ -39,6 +53,25 @@ the concept.
     launcher.py -t    -   Runs 'tall' window configuration settings
     launcher.py -m    -   Runs 'mid' window configuration settings
 ```
+
+v2 Changelog:
+
+Default browser launch support and resizing system left in place, webbrowser module used within launch support to open URL in new tab. 
+
+Updated help and usage flag output, as well as top comments. 
+
+Added function comment for set_dimensions.
+
+Chose to remove Teams launch support, and rely on OS boot to kick off Teams since it's a parasite inside of Windows already. Should be fine. 
+
+Merging back into master branch after this. 
+
+Known Issues:
+Spotify must not be playing any media in order to be targeted successfully.
+
+Brave AppLaunch always fails runtime check and opens a new browser tab.
+
+Brave AppLaunch will move and resize all currently open Brave windows.
 
 ---
 
