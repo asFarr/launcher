@@ -1,0 +1,17 @@
+--- # Application Preferences File - Microsoft Outlook
+application:
+      name         : OUTLOOK
+      path         : C:\Program Files\TBD
+load-delay: 8
+local-dimensions:
+      X-Origin     : 0
+      Y-Origin     : 0
+      Width        : 1280
+      Height       : 720
+remote-dimensions:
+      X-Origin     : 0
+      Y-Origin     : 0
+      Width        : 1280
+      Height       : 720
+comments: >
+  Any comments may be entered from this point onward.

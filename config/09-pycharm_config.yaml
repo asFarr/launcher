@@ -1,0 +1,17 @@
+--- # Application Preferences File - PyCharm Professional
+application:
+      name         : PyCharm
+      path         : C:\Users\leToads\AppData\Local\JetBrains\Toolbox\apps\PyCharm-P\ch-0\221.5921.27\bin\pycharm64.exe
+load-delay: 6
+local-dimensions:
+      X-Origin     : 0
+      Y-Origin     : 0
+      Width        : 1280
+      Height       : 720
+remote-dimensions:
+      X-Origin     : 0
+      Y-Origin     : 0
+      Width        : 1280
+      Height       : 720
+comments: >
+  Any comments may be entered from this point onward.

@@ -1,0 +1,17 @@
+--- # Application Preferences File - Visual Studio Code
+application:
+      name         : Code
+      path         : C:\Users\leToads\AppData\Local\Programs\Microsoft VS Code\Code.exe
+load-delay: 4
+local-dimensions:
+      X-Origin     : 0
+      Y-Origin     : 0
+      Width        : 1280
+      Height       : 720
+remote-dimensions:
+      X-Origin     : 0
+      Y-Origin     : 0
+      Width        : 1280
+      Height       : 720
+comments: >
+  Any comments may be entered from this point onward.

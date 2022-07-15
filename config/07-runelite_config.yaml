@@ -1,0 +1,17 @@
+--- # Application Preferences File - Runelite
+application:
+      name         : runelite
+      path         : C:\Users\leToads\AppData\Local\RuneLite\RuneLite.exe
+load-delay: 12
+local-dimensions:
+      X-Origin     : 0
+      Y-Origin     : 0
+      Width        : 1280
+      Height       : 720
+remote-dimensions:
+      X-Origin     : 0
+      Y-Origin     : 0
+      Width        : 1280
+      Height       : 720
+comments: >
+  Any comments may be entered from this point onward.
