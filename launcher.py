@@ -109,30 +109,20 @@ def loadcfg():
         local_dims.append(entry["local-dimensions"])
 
 
-def appstart(passed_path, passed_delay):  # TODO: Currently broken
-    runlist = []
-    for app in app_list:
-        runlist.append(app + '.exe' in (i.name() for i in ps.process_iter()))
-        print(app + '.exe' in (i.name() for i in ps.process_iter()))
-        # print(runlist)
-        print(app)
-        # print(app)
-        for runcheck in runlist:
-            if runcheck is True:
-                if re.search(app_list[0], app):
-                    print("success")
-                    # os.startfile(passed_path)
-                    time.sleep(passed_delay)
+def appstart(passed_name, passed_path, passed_delay):
+    running = passed_name + ".exe" in (i.name() for i in ps.process_iter())
+    if not running:
+        os.startfile(passed_path)
+        time.sleep(passed_delay)
 
 
-def windowresize(name, dim_list):
+def windowresize(passed_name, passed_dim_list):
     #  TODO: If Brave do different stuff, and if Steam do different stuff
     #   otherwise take window name input, find the window, and resize it to input dims
-    print(name)
-    print(dim_list)
 
-    hwnd = gui.GetForegroundWindow()
-    gui.MoveWindow(hwnd, dim_list["X-Origin"], dim_list["Y-Origin"], dim_list["Width"], dim_list["Height"], True)
+    hwnd = gui.FindWindow(None, passed_name)
+    gui.MoveWindow(hwnd, passed_dim_list["X-Origin"], passed_dim_list["Y-Origin"],
+                   passed_dim_list["Width"], passed_dim_list["Height"], True)
 
 """def steam():
     
@@ -192,17 +182,20 @@ def main(args):
                 print("remote flag")
                 print("needs to write window dimension values for remote window orientation to dim variables")
                 print("then needs to run dim setting logic, or call function that does")
+                appstart(app_list[2], path_list[2], delay_list[2])
+                windowresize(app_list[2], remote_dims[2])
 
             if current_argument == "-l":  # -Local orientation Mode
                 print("local flag")
                 print("needs to write window dimension values for local window orientation to dim variables")
                 print("then needs to run dim setting logic, or call function that does")
+                windowresize(app_list[0], local_dims[0])
 
             if current_argument == "-g":  # -Gaming app launch Mode
                 print("gaming flag")
                 print("needs to write gaming app names and filepaths to name-path dictionary")
                 print("then needs to call launch check method to iterate through dictionary and launch apps")
-                appstart(path_list[0], delay_list[0])
+                appstart(app_list[0], path_list[0], delay_list[0])
 
             if current_argument == "-w":  # -Workstation app launch Mode
                 print("workstation flag")
