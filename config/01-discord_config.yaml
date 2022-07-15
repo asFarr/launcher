@@ -4,7 +4,7 @@ application:
       path         : C:\Users\leToads\AppData\Local\Discord\app-1.0.9003\Discord.exe
 load-delay: 5
 local-dimensions:
-      X-Origin     : 3520
+      X-Origin     : 0
       Y-Origin     : 0
       Width        : 960
       Height       : 1040
